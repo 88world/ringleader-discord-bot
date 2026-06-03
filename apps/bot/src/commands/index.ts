@@ -1,4 +1,5 @@
 import type { BotCommand } from "../types.js";
+import { automodCommand } from "./automod.js";
 import { embedCommand } from "./embed.js";
 import { moderationCommand } from "./moderation.js";
 import {
@@ -21,6 +22,7 @@ export const commands: BotCommand[] = [
   embedCommand,
   reactionRoleCommand,
   trackerCommand,
+  automodCommand,
   rulesCommand,
   welcomePanelCommand,
   announceCommand,
