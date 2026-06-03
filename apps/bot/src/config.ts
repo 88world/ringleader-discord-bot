@@ -13,6 +13,7 @@ const envSchema = z.object({
   SESSION_SECRET: z.string().min(16),
   YOUTUBE_POLL_CRON: z.string().default("*/10 * * * *"),
   TWITTER_POLL_CRON: z.string().default("*/15 * * * *"),
+  TWITTER_BEARER_TOKEN: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);

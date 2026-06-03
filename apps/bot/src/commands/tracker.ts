@@ -28,17 +28,11 @@ export const trackerCommand: BotCommand = {
     .addSubcommand((sub) =>
       sub
         .setName("twitter")
-        .setDescription("Track Twitter/X via RSS/feed URL")
-        .addStringOption((opt) =>
-          opt
-            .setName("feed_url")
-            .setDescription("RSS feed URL")
-            .setRequired(true),
-        )
+        .setDescription("Track a Twitter/X account (requires TWITTER_BEARER_TOKEN)")
         .addStringOption((opt) =>
           opt
             .setName("handle")
-            .setDescription("Label for this tracker")
+            .setDescription("Twitter/X username without @, e.g. showofsouls")
             .setRequired(true),
         )
         .addChannelOption((opt) =>
@@ -99,7 +93,7 @@ export const trackerCommand: BotCommand = {
       return;
     }
 
-    const feedUrl = interaction.options.getString("feed_url", true);
+    const feedUrl = interaction.options.getString("feed_url");
     const handle = interaction.options.getString("handle", true);
 
     await db.tracker.upsert({
@@ -112,14 +106,14 @@ export const trackerCommand: BotCommand = {
       },
       update: {
         destinationChannel: destination.id,
-        metaJson: feedUrl,
+        metaJson: feedUrl ?? null,
       },
       create: {
         guildId: interaction.guild.id,
         kind: "twitter",
         sourceId: handle,
         destinationChannel: destination.id,
-        metaJson: feedUrl,
+        metaJson: feedUrl ?? null,
       },
     });
 
