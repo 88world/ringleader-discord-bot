@@ -172,7 +172,9 @@ process.on("SIGINT", async () => {
   process.exit(0);
 });
 
-client.login(env.DISCORD_TOKEN).catch((error) => {
-  logger.error({ error }, "Failed to login");
+logger.info(`Attempting login with token ending in ...${env.DISCORD_TOKEN.slice(-6)}`);
+client.login(env.DISCORD_TOKEN).catch((error: unknown) => {
+  const err = error instanceof Error ? error : new Error(String(error));
+  logger.error({ message: err.message, name: err.name, stack: err.stack }, "Failed to login");
   process.exit(1);
 });
