@@ -84,19 +84,33 @@ const clearSessionCookie = (res: Response) => {
   });
 };
 
+type CachedGuilds = { guilds: ReturnType<typeof mapGuilds>; expiresAt: number };
+const guildCache = new Map<string, CachedGuilds>();
+const GUILD_CACHE_TTL = 2 * 60 * 1000; // 2 minutes
+
+const mapGuilds = (data: DiscordGuild[]) =>
+  data.map((guild) => ({
+    id: guild.id,
+    name: guild.name,
+    icon: guild.icon,
+    isAdmin: (BigInt(guild.permissions) & 0x8n) === 0x8n,
+  }));
+
 const toDiscordOauthGuilds = async (accessToken: string) => {
+  const cached = guildCache.get(accessToken);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.guilds;
+  }
+
   const guildRes = await axios.get<DiscordGuild[]>("https://discord.com/api/users/@me/guilds", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
 
-  return guildRes.data.map((guild) => ({
-    id: guild.id,
-    name: guild.name,
-    icon: guild.icon,
-    isAdmin: (BigInt(guild.permissions) & 0x8n) === 0x8n,
-  }));
+  const guilds = mapGuilds(guildRes.data);
+  guildCache.set(accessToken, { guilds, expiresAt: Date.now() + GUILD_CACHE_TTL });
+  return guilds;
 };
 
 const getSessionFromRequest = async (req: Request) => {
