@@ -3,6 +3,7 @@ import {
   ActivityType,
   ChannelType,
   Client,
+  EmbedBuilder,
   Events,
   GatewayIntentBits,
   Partials,
@@ -94,7 +95,21 @@ client.on(Events.GuildMemberAdd, async (member) => {
   if (cfg.welcomeEnabled && cfg.welcomeChannelId) {
     const ch = member.guild.channels.cache.get(cfg.welcomeChannelId);
     if (ch && ch.type === ChannelType.GuildText) {
-      await (ch as TextChannel).send(`Welcome to the server, ${member}!`);
+      const dot = "<:dot:1511471263183278141>";
+      const embed = new EmbedBuilder()
+        .setColor(0x5865f2)
+        .setTitle(`Welcome to ${member.guild.name}, ${member.user.username}!`)
+        .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
+        .setDescription(
+          `Before you begin exploring, please take a moment to read through <#${cfg.rulesChannelId ?? "rules"}> to ensure a respectful and enjoyable environment for everyone.\n\nHere's a quick guide to the main areas of the server:\n\n` +
+          `${dot} <#1377600737365856388> → Official news, updates, and important information from the team.\n\n` +
+          `${dot} <#1374331795956437177> → A hub for verified links and any other resources.\n\n` +
+          `${dot} <#1374331795956437178> → Stay up to date with our latest posts and highlights from the community.\n\n` +
+          `Take your time to look around, get familiar with the channels, and feel free to join the conversation. We're glad to have you with us in the server.`,
+        )
+        .setFooter({ text: `Member #${member.guild.memberCount}` })
+        .setTimestamp();
+      await (ch as TextChannel).send({ content: `${member}`, embeds: [embed] });
     }
   }
 });
