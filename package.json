@@ -1,0 +1,19 @@
+{
+  "name": "ringleader",
+  "version": "1.0.0",
+  "description": "All-purpose Discord bot with web dashboard",
+  "scripts": {
+    "build": "npm run build -ws",
+    "dev:bot": "npm run dev -w apps/bot",
+    "dev:dashboard": "npm run dev -w apps/dashboard",
+    "start:bot": "npm run start -w apps/bot",
+    "start:dashboard": "npm run start -w apps/dashboard"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ]
+}

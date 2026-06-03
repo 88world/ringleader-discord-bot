@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model GuildConfig {
+  guildId          String   @id
+  rulesChannelId   String?
+  welcomeChannelId String?
+  modlogChannelId  String?
+  ticketCategoryId String?
+  ticketPanelId    String?
+  autoroleId       String?
+  welcomeEnabled   Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Ticket {
+  id          String   @id @default(cuid())
+  guildId     String
+  channelId   String   @unique
+  ownerId     String
+  status      String   @default("open")
+  createdAt   DateTime @default(now())
+  closedAt    DateTime?
+}
+
+model ReactionRole {
+  id        String   @id @default(cuid())
+  guildId   String
+  messageId String
+  emoji     String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, messageId, emoji])
+}
+
+model Warning {
+  id         String   @id @default(cuid())
+  guildId    String
+  userId     String
+  moderatorId String
+  reason     String
+  createdAt  DateTime @default(now())
+}
+
+model EmbedPreset {
+  id          String   @id @default(cuid())
+  guildId     String
+  name        String
+  payloadJson String
+  createdBy   String
+  createdAt   DateTime @default(now())
+
+  @@unique([guildId, name])
+}
+
+model Tracker {
+  id                 String   @id @default(cuid())
+  guildId            String
+  kind               String
+  sourceId           String
+  destinationChannel String
+  lastKnownContentId String?
+  metaJson           String?
+  createdAt          DateTime @default(now())
+
+  @@unique([guildId, kind, sourceId])
+}
+
+model AutoModRule {
+  id            String   @id @default(cuid())
+  guildId       String
+  name          String
+  kind          String
+  pattern       String
+  action        String
+  threshold     Int      @default(1)
+  windowSeconds Int      @default(60)
+  timeoutMinutes Int     @default(10)
+  exemptRoleIds String?
+  enabled       Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([guildId, enabled])
+  @@unique([guildId, name])
+}
+
+model DashboardSession {
+  id           String   @id @default(cuid())
+  userId       String
+  username     String
+  accessToken  String
+  refreshToken String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+}
+
+model OAuthState {
+  id        String   @id
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
