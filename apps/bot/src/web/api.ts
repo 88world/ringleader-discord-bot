@@ -62,12 +62,14 @@ const verifySignedToken = (signedValue: string | undefined): string | null => {
   return value;
 };
 
+const isProd = process.env.NODE_ENV === "production";
+
 const setSessionCookie = (res: Response, sessionId: string) => {
   const signed = createSignedToken(sessionId);
   res.cookie(sessionCookieName, signed, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
     maxAge: 1000 * 60 * 60 * 24 * 7,
     path: "/",
   });
@@ -76,8 +78,8 @@ const setSessionCookie = (res: Response, sessionId: string) => {
 const clearSessionCookie = (res: Response) => {
   res.clearCookie(sessionCookieName, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
     path: "/",
   });
 };
@@ -187,8 +189,8 @@ export const startDashboardApi = (client: Client) => {
 
     res.cookie(oauthStateCookie, createSignedToken(stateId), {
       httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd,
       maxAge: 1000 * 60 * 10,
       path: "/",
     });
