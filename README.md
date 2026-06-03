@@ -36,3 +36,10 @@ Monorepo with:
 - Set `DASHBOARD_PUBLIC_URL` to the public dashboard domain.
 - Set `DISCORD_REDIRECT_URI` to `https://<your-bot-domain>/auth/discord/callback`.
 - Set `VITE_API_BASE` in dashboard service to bot API public URL.
+- Full step-by-step guide: [docs/railway.md](docs/railway.md)
+- Bot service commands:
+	- Build: `npm run railway:bot:build`
+	- Start: `npm run railway:bot:start`
+- Dashboard service commands:
+	- Build: `npm run railway:dashboard:build`
+	- Start: `npm run railway:dashboard:start`

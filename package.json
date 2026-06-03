@@ -7,7 +7,11 @@
     "dev:bot": "npm run dev -w apps/bot",
     "dev:dashboard": "npm run dev -w apps/dashboard",
     "start:bot": "npm run start -w apps/bot",
-    "start:dashboard": "npm run start -w apps/dashboard"
+    "start:dashboard": "npm run start -w apps/dashboard",
+    "railway:bot:build": "npm ci && npm run build -w apps/bot",
+    "railway:bot:start": "npm run start:railway -w apps/bot",
+    "railway:dashboard:build": "npm ci && npm run build -w apps/dashboard",
+    "railway:dashboard:start": "npm run start -w apps/dashboard"
   },
   "keywords": [],
   "author": "",
